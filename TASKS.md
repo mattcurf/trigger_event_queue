@@ -17,25 +17,25 @@ This document outlines the step-by-step tasks required to implement the `test_qu
     - [x] Install dependencies (`@supabase/supabase-js`, etc.).
 
 ## Phase 2: Database & Queue Configuration (Supabase)
-- [ ] **Enable Extensions**
-    - [ ] Create migration to enable `pgmq` and `pg_net`.
-- [ ] **Schema Setup**
-    - [ ] Create migration for `job_results` table.
+- [x] **Enable Extensions**
+    - [x] Create migration to enable `pgmq` and `pg_net`.
+- [x] **Schema Setup**
+    - [x] Create migration for `job_results` table.
         - `id` (uuid, pk)
         - `job_id` (uuid)
         - `status` (text)
         - `result` (text)
         - `created_at` (timestamptz)
-    - [ ] Create PGMQ queue `work_queue` (via migration/seed).
-- [ ] **Database Functions (API Layer)**
-    - [ ] Create a Postgres function `submit_job(task_name text)` to:
+    - [x] Create PGMQ queue `work_queue` (via migration/seed).
+- [x] **Database Functions (API Layer)**
+    - [x] Create a Postgres function `submit_job(task_name text)` to:
         - Generate a `job_id`.
         - Insert an initial record into `job_results` with status 'pending'.
         - Enqueue the message into `work_queue`.
         - Return the `job_id`.
-- [ ] **Webhook Trigger Setup**
-    - [ ] Define the Trigger.dev webhook URL endpoint.
-    - [ ] Create a Postgres trigger/function using `pg_net` to call the Trigger.dev webhook whenever a new message is added to `work_queue` (or poll if using Trigger.dev PGMQ integration, but PRD specifies "Postgres trigger ... sends payload").
+- [x] **Webhook Trigger Setup**
+    - [x] Define the Trigger.dev webhook URL endpoint.
+    - [x] Create a Postgres trigger/function using `pg_net` to call the Trigger.dev webhook whenever a new message is added to `work_queue` (or poll if using Trigger.dev PGMQ integration, but PRD specifies "Postgres trigger ... sends payload").
 
 ## Phase 3: Background Worker Implementation (Trigger.dev)
 - [ ] **Develop Worker**
