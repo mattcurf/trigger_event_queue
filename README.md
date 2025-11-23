@@ -53,55 +53,23 @@ User sees "Completed" status
 
 ### Architecture Diagram
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│ FRONTEND (Vite + React)                                         │
-│ • Job input form                                                │
-│ • Job list table (ID, Name, Status, Result)                    │
-│ • Realtime subscription to job_results table                   │
-└──────────────────────┬──────────────────────────────────────────┘
-                       │ RPC: submit_job(task_name)
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ SUPABASE (PostgreSQL)                                           │
-│                                                                 │
-│ ┌─ submit_job() Function                                       │
-│ │  1. Generate job_id (uuid)                                   │
-│ │  2. INSERT into job_results (status='pending')               │
-│ │  3. INSERT into pgmq.work_queue (message with job_id)        │
-│ │  4. RETURN job_id                                            │
-│ └─────────────────────────────────────────────────────────────┐
-│                       ↓ (Trigger: AFTER INSERT)                │
-│ ┌─ Postgres Trigger Function (notify_work_queue_inserted)     │
-│ │  Calls pg_net.http_post() → Trigger.dev webhook URL         │
-│ └─────────────────────────────────────────────────────────────┐
-│                       ↓ (HTTP POST)                             │
-└─────────────────────────────────────────────────────────────────┘
-                       │
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ TRIGGER.DEV (Background Workers)                                │
-│                                                                 │
-│ ┌─ Webhook Handler (/webhooks/job)                             │
-│ │  Receives: { job_id: uuid, task_name: string }              │
-│ └─────────────────────────────────────────────────────────────┐
-│                       ↓                                         │
-│ ┌─ processJob() Function                                       │
-│ │  1. Simulate work (5-10 sec delay)                           │
-│ │  2. Generate result string                                   │
-│ │  3. UPDATE job_results (status='completed', result=...)      │
-│ │  4. Return { success, job_id, result }                       │
-│ └─────────────────────────────────────────────────────────────┐
-│
-└─────────────────────────────────────────────────────────────────┘
-                       │ UPDATE notification (via Realtime)
-                       ↓
-┌─────────────────────────────────────────────────────────────────┐
-│ SUPABASE REALTIME                                               │
-│ • Broadcasts INSERT/UPDATE events on job_results table         │
-│ • Frontend WebSocket receives update                           │
-│ • UI state auto-refreshes (no page reload)                     │
-└─────────────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    A["🖥️ FRONTEND<br/>Vite + React<br/>• Job input form<br/>• Job list table<br/>• Realtime subscription"] -->|"RPC: submit_job(task_name)"| B
+    B["📊 SUPABASE PostgreSQL<br/>submit_job() Function<br/>1. Generate job_id<br/>2. INSERT job_results pending<br/>3. INSERT pgmq.work_queue<br/>4. RETURN job_id"] -->|"AFTER INSERT trigger"| C
+    C["🔔 Postgres Trigger<br/>notify_work_queue_inserted()<br/>Calls pg_net.http_post()<br/>→ Trigger.dev webhook URL"] -->|"HTTP POST /webhooks/job"| D
+    D["⚙️ TRIGGER.DEV Webhook Handler<br/>Receives:<br/>{ job_id, task_name }"] --> E
+    E["⏳ TRIGGER.DEV Worker<br/>processJob() Function<br/>1. Simulate work 5-10s<br/>2. Generate result string<br/>3. UPDATE job_results<br/>4. Return success"] -->|"UPDATE job_results<br/>status=completed"| F
+    F["📊 SUPABASE PostgreSQL<br/>job_results table updated"] -->|"Realtime Event<br/>INSERT/UPDATE"| G
+    G["🔌 SUPABASE REALTIME<br/>WebSocket broadcast<br/>to subscribed clients"] -->|"Auto-refresh UI<br/>no page reload"| A
+    
+    style A fill:#4F46E5,stroke:#312E81,color:#fff
+    style B fill:#059669,stroke:#065F46,color:#fff
+    style C fill:#7C3AED,stroke:#5B21B6,color:#fff
+    style D fill:#DC2626,stroke:#7F1D1D,color:#fff
+    style E fill:#DC2626,stroke:#7F1D1D,color:#fff
+    style F fill:#059669,stroke:#065F46,color:#fff
+    style G fill:#0891B2,stroke:#164E63,color:#fff
 ```
 
 ### Why This Architecture?

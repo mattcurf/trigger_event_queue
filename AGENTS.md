@@ -22,3 +22,9 @@
 - **Naming**: `camelCase` for JS/TS, `snake_case` for Database/SQL.
 - **Error Handling**: Use explicit error checks with Supabase client; do not ignore `.error`.
 - **Imports**: Use absolute paths (`@/`) where configured, otherwise relative.
+
+## 4. Documentation Standards
+- **Diagrams**: All architecture, flow, and process diagrams **must** use Mermaid syntax.
+- **Formats**: Support `graph TD`, `sequenceDiagram`, `stateDiagram`, `flowchart` as needed.
+- **Styling**: Use dark fill colors with light text for visibility (e.g., `fill:#4F46E5,stroke:#312E81,color:#fff`).
+- **Examples**: See `README.md` for Mermaid diagram examples.
