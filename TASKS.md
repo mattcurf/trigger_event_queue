@@ -49,17 +49,17 @@ This document outlines the step-by-step tasks required to implement the `test_qu
     - [x] Implement write-back logic to update `job_results` table (set `status`='completed', update `result`).
 
 ## Phase 4: Frontend Implementation (Vite + React)
-- [ ] **Supabase Client**
-    - [ ] Configure `supabaseClient.ts` with env vars.
-- [ ] **Job Submission UI**
-    - [ ] Create input form for "Job Name".
-    - [ ] specific RPC call to `submit_job`.
-- [ ] **Job List UI**
-    - [ ] Fetch initial list of jobs from `job_results`.
-    - [ ] Render table/list with columns.
-- [ ] **Realtime Integration**
-    - [ ] Subscribe to `INSERT` and `UPDATE` on `job_results`.
-    - [ ] Update local state on realtime events to reflect status changes.
+- [x] **Supabase Client**
+    - [x] Configure `supabaseClient.ts` with env vars.
+- [x] **Job Submission UI**
+    - [x] Create input form for "Job Name".
+    - [x] specific RPC call to `submit_job`.
+- [x] **Job List UI**
+    - [x] Fetch initial list of jobs from `job_results`.
+    - [x] Render table/list with columns.
+- [x] **Realtime Integration**
+    - [x] Subscribe to `INSERT` and `UPDATE` on `job_results`.
+    - [x] Update local state on realtime events to reflect status changes.
 
 ## Phase 5: Testing & Verification
 - [ ] **End-to-End Test**

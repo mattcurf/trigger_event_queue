@@ -1,34 +1,38 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { JobSubmissionForm } from './components/JobSubmissionForm'
+import { JobList } from './components/JobList'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
+
+  const handleJobSubmitted = () => {
+    // Trigger a re-mount of JobList to refresh
+    setRefreshTrigger((prev) => prev + 1)
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="container">
+      <header className="header">
+        <h1>Job Queue</h1>
+        <p className="subtitle">Submit jobs and track their progress in real-time</p>
+      </header>
+
+      <main className="main-content">
+        <section className="submission-section">
+          <h2>Submit a New Job</h2>
+          <JobSubmissionForm onJobSubmitted={handleJobSubmitted} />
+        </section>
+
+        <section className="list-section">
+          <JobList key={refreshTrigger} />
+        </section>
+      </main>
+
+      <footer className="footer">
+        <p>&copy; 2025 Job Queue. All rights reserved.</p>
+      </footer>
+    </div>
   )
 }
 
