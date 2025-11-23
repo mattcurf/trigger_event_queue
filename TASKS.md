@@ -38,15 +38,15 @@ This document outlines the step-by-step tasks required to implement the `test_qu
     - [x] Create a Postgres trigger/function using `pg_net` to call the Trigger.dev webhook whenever a new message is added to `work_queue` (or poll if using Trigger.dev PGMQ integration, but PRD specifies "Postgres trigger ... sends payload").
 
 ## Phase 3: Background Worker Implementation (Trigger.dev)
-- [ ] **Develop Worker**
-    - [ ] Create a Trigger.dev task defined by a Webhook trigger.
-    - [ ] Parse payload (`job_id`, `task_name`).
-- [ ] **Implement Logic**
-    - [ ] Add simulated delay (5-10 seconds).
-    - [ ] Generate result string.
-- [ ] **Database Connection**
-    - [ ] Configure Supabase Service Role client in Trigger.dev project.
-    - [ ] Implement write-back logic to update `job_results` table (set `status`='completed', update `result`).
+- [x] **Develop Worker**
+    - [x] Create a Trigger.dev task defined by a Webhook trigger.
+    - [x] Parse payload (`job_id`, `task_name`).
+- [x] **Implement Logic**
+    - [x] Add simulated delay (5-10 seconds).
+    - [x] Generate result string.
+- [x] **Database Connection**
+    - [x] Configure Supabase Service Role client in Trigger.dev project.
+    - [x] Implement write-back logic to update `job_results` table (set `status`='completed', update `result`).
 
 ## Phase 4: Frontend Implementation (Vite + React)
 - [ ] **Supabase Client**
